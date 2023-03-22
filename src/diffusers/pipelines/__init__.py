@@ -65,6 +65,7 @@ else:
         StableUnCLIPPipeline,
     )
     from .stable_diffusion_safe import StableDiffusionPipelineSafe
+    from .text_to_video_synthesis import TextToVideoSDPipeline
     from .unclip import UnCLIPImageVariationPipeline, UnCLIPPipeline
     from .versatile_diffusion import (
         VersatileDiffusionDualGuidedPipeline,
@@ -93,6 +94,7 @@ else:
         OnnxStableDiffusionInpaintPipeline,
         OnnxStableDiffusionInpaintPipelineLegacy,
         OnnxStableDiffusionPipeline,
+        OnnxStableDiffusionUpscalePipeline,
         StableDiffusionOnnxPipeline,
     )
 

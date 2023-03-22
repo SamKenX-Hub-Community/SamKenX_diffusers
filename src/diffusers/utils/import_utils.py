@@ -169,6 +169,14 @@ if _onnx_available:
     if _onnx_available:
         logger.debug(f"Successfully imported onnxruntime version {_onnxruntime_version}")
 
+# (sayakpaul): importlib.util.find_spec("opencv-python") returns None even when it's installed.
+# _opencv_available = importlib.util.find_spec("opencv-python") is not None
+try:
+    _opencv_version = importlib_metadata.version("opencv-python")
+    _opencv_available = True
+    logger.debug(f"Successfully imported cv2 version {_opencv_version}")
+except importlib_metadata.PackageNotFoundError:
+    _opencv_available = False
 
 _scipy_available = importlib.util.find_spec("scipy") is not None
 try:
@@ -232,6 +240,14 @@ except importlib_metadata.PackageNotFoundError:
     _tensorboard_available = False
 
 
+_compel_available = importlib.util.find_spec("compel")
+try:
+    _compel_version = importlib_metadata.version("compel")
+    logger.debug(f"Successfully imported compel version {_compel_version}")
+except importlib_metadata.PackageNotFoundError:
+    _compel_available = False
+
+
 def is_torch_available():
     return _torch_available
 
@@ -262,6 +278,10 @@ def is_unidecode_available():
 
 def is_onnx_available():
     return _onnx_available
+
+
+def is_opencv_available():
+    return _opencv_available
 
 
 def is_scipy_available():
@@ -296,6 +316,10 @@ def is_tensorboard_available():
     return _tensorboard_available
 
 
+def is_compel_available():
+    return _compel_available
+
+
 # docstyle-ignore
 FLAX_IMPORT_ERROR = """
 {0} requires the FLAX library but it was not found in your environment. Checkout the instructions on the
@@ -318,6 +342,12 @@ installation page: https://pytorch.org/get-started/locally/ and follow the ones 
 ONNX_IMPORT_ERROR = """
 {0} requires the onnxruntime library but it was not found in your environment. You can install it with pip: `pip
 install onnxruntime`
+"""
+
+# docstyle-ignore
+OPENCV_IMPORT_ERROR = """
+{0} requires the OpenCV library but it was not found in your environment. You can install it with pip: `pip
+install opencv-python`
 """
 
 # docstyle-ignore
@@ -368,11 +398,18 @@ TENSORBOARD_IMPORT_ERROR = """
 install tensorboard`
 """
 
+
+# docstyle-ignore
+COMPEL_IMPORT_ERROR = """
+{0} requires the compel library but it was not found in your environment. You can install it with pip: `pip install compel`
+"""
+
 BACKENDS_MAPPING = OrderedDict(
     [
         ("flax", (is_flax_available, FLAX_IMPORT_ERROR)),
         ("inflect", (is_inflect_available, INFLECT_IMPORT_ERROR)),
         ("onnx", (is_onnx_available, ONNX_IMPORT_ERROR)),
+        ("opencv", (is_opencv_available, OPENCV_IMPORT_ERROR)),
         ("scipy", (is_scipy_available, SCIPY_IMPORT_ERROR)),
         ("torch", (is_torch_available, PYTORCH_IMPORT_ERROR)),
         ("transformers", (is_transformers_available, TRANSFORMERS_IMPORT_ERROR)),
@@ -382,6 +419,7 @@ BACKENDS_MAPPING = OrderedDict(
         ("wandb", (is_wandb_available, WANDB_IMPORT_ERROR)),
         ("omegaconf", (is_omegaconf_available, OMEGACONF_IMPORT_ERROR)),
         ("tensorboard", (_tensorboard_available, TENSORBOARD_IMPORT_ERROR)),
+        ("compel", (_compel_available, COMPEL_IMPORT_ERROR)),
     ]
 )
 
